@@ -1,0 +1,13 @@
+# version: '3.8'
+services:
+  code-server:
+    image: code-server-update
+    user: "1000:1000"  # Map to your user's UID:GID
+    ports:
+      - "9090:8080"
+      - "9091:8081"
+    volumes:
+      - /c/Users/Prani/Projects/bolt-mobile-app/apps/code-server/tmp/bolty-worker/:/home/coder/bolty-worker
+    environment:
+      - PUID=1000
+      - PGID=1000
