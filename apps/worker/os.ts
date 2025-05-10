@@ -12,6 +12,7 @@ const BASE_WORKER_DIR = join(
   "tmp",
   "bolty-worker"
 );
+
 console.log("BASE_WORKER_DIR: ", BASE_WORKER_DIR);
 
 export async function onFileUpdate(
