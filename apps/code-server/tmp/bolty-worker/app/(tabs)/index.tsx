@@ -1,5 +1,4 @@
-import { Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
+import { Image, StyleSheet, Platform } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -20,14 +19,6 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
-      
-      <TouchableOpacity 
-        style={styles.chessButton}
-        onPress={() => router.push('/chess')}
-      >
-        <ThemedText style={styles.chessButtonText}>Play Chess</ThemedText>
-      </TouchableOpacity>
-      
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
@@ -79,17 +70,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
-  },
-  chessButton: {
-    backgroundColor: '#0a7ea4',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  chessButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
   },
 });
