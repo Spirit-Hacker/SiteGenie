@@ -12,6 +12,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 app.post("/project", authMiddleware, async (req, res) => {
   const { prompt } = req.body;
   const userId = req.userId!;
