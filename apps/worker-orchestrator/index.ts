@@ -88,7 +88,7 @@ await refreshInstances();
 setInterval(async () => {
   await refreshInstances();
 }, 10 * 1000);
-
+ 
 app.get("/:projectId", async (req, res) => {
   const idleMachine = ALL_MACHINES.find((machine) => machine.isUsed === false);
   if (!idleMachine) {
