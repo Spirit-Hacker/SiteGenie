@@ -2,10 +2,13 @@
 services:
   code-server:
     image: code-server-update
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     user: "1000:1000"  # Map to your user's UID:GID
     ports:
       - "9090:8080"
       - "9091:8081"
+      - "8082:8082"
     volumes:
       - /c/Users/Prani/Projects/bolt-mobile-app/apps/code-server/tmp/bolty-worker/:/home/coder/bolty-worker
     environment:

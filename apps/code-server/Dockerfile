@@ -12,8 +12,9 @@ USER coder
 
 EXPOSE 8080
 
+RUN pwd && pwd && pwd && pwd && ls && pwd
 RUN mkdir -p /home/coder/bolty-worker
-RUN wget https://github.com/Spirit-Hacker/remote-vscode-extension/raw/refs/heads/main/site-genie-listener-0.0.1.vsix
+RUN wget --no-cache https://github.com/Spirit-Hacker/remote-vscode-extension/raw/refs/heads/main/site-genie-listener-0.0.1.vsix
 RUN code-server --install-extension site-genie-listener-0.0.1.vsix
 
 CMD [ "code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "/home/coder/bolty-worker" ]
