@@ -1,9 +1,6 @@
-import fs from "fs/promises";
-import { dirname, join } from "path";
-import os from "os";
 import { prismaClient } from "db/client";
 import http from "http";
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
 
 const server = http.createServer();
 const wss = new WebSocketServer({ server });
@@ -11,17 +8,9 @@ const wss = new WebSocketServer({ server });
 // Store connected clients
 const clients = new Set<WebSocket>();
 
-wss.on("connection", (ws) => {
+wss.on("connection", (ws: WebSocket) => {
   console.log("Client connected");
   clients.add(ws);
-
-  // onFileUpdate(
-  //   "app/(tabs)/pranil.tsx",
-  //   "This file was updated by Pranil",
-  //   "12345"
-  // );
-  // const command = "pwd && ls";
-  // onShellCommand(command, "12345");
 
   ws.on("close", () => {
     console.log("Client disconnected");
@@ -39,27 +28,12 @@ function broadcast(data: any) {
   }
 }
 
-// const BASE_WORKER_DIR = join(
-//   os.homedir(),
-//   "Projects",
-//   "bolt-mobile-app",
-//   "apps",
-//   "code-server",
-//   "tmp",
-//   "bolty-worker"
-// );
-
-// console.log("BASE_WORKER_DIR: ", BASE_WORKER_DIR);
-
 export async function onFileUpdate(
   filePath: string,
   fileContent: string,
   projectId: string
 ) {
   console.log("updating file: ", filePath);
-  // const fullPath = join(BASE_WORKER_DIR, filePath);
-  // console.log("fullPath: ", fullPath);
-
   // Broadcast update to all clients
   broadcast({
     type: "file-update",
