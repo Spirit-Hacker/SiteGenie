@@ -8,9 +8,53 @@ const wss = new WebSocketServer({ server });
 // Store connected clients
 const clients = new Set<WebSocket>();
 
-wss.on("connection", (ws: WebSocket) => {
+const testContent = `
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+  This file was updated by Pranil
+`;
+
+wss.on("connection", async (ws: WebSocket) => {
   console.log("Client connected");
   clients.add(ws);
+
+  // await onFileUpdate(
+  //   "app/(tabs)/pranil.tsx",
+  //   testContent,
+  //   "12345"
+  // );
+
+  // await onFileUpdate(
+  //   "app/(tabs)/kavya.tsx",
+  //   testContent,
+  //   "12345"
+  // );
+
+  // await onFileUpdate(
+  //   "app/(tabs)/dad/sunil.tsx",
+  //   testContent,
+  //   "12345"
+  // );
+
+  // const command = "pwd && ls";
+  // onShellCommand(command, "12345");
 
   ws.on("close", () => {
     console.log("Client disconnected");
@@ -31,7 +75,8 @@ function broadcast(data: any) {
 export async function onFileUpdate(
   filePath: string,
   fileContent: string,
-  projectId: string
+  projectId: string,
+  promptId: string
 ) {
   console.log("updating file: ", filePath);
   // Broadcast update to all clients
@@ -45,11 +90,16 @@ export async function onFileUpdate(
     data: {
       projectId,
       content: `Updated File ${filePath}`,
+      promptId,
     },
   });
 }
 
-export async function onShellCommand(shellCommand: string, projectId: string) {
+export async function onShellCommand(
+  shellCommand: string,
+  projectId: string,
+  promptId: string
+) {
   // npx --yes vite@latest chess-app && cd chess-app && npm install && npm run dev
   // Broadcast update to all clients
   broadcast({
@@ -61,10 +111,11 @@ export async function onShellCommand(shellCommand: string, projectId: string) {
     data: {
       projectId,
       content: `Run command ${shellCommand.trim()}`,
+      promptId,
     },
   });
 }
 
 server.listen(8082, "0.0.0.0", () => {
-  console.log("WebSocket server running 1");
+  console.log("WebSocket server running on PORT 8082");
 });

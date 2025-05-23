@@ -16,7 +16,7 @@ app.post("/prompt", async (req, res) => {
     apiKey: process.env.ANTHROPIC_API_KEY,
   });
 
-  await prismaClient.prompt.create({
+  const userPrompt = await prismaClient.prompt.create({
     data: {
       content: prompt,
       projectId,
@@ -37,8 +37,8 @@ app.post("/prompt", async (req, res) => {
   let artifactProcessor = new ArtifactProcessor(
     "",
     (filePath, fileContent) =>
-      onFileUpdate(filePath, fileContent, projectId),
-    (shellCommand) => onShellCommand(shellCommand, projectId)
+      onFileUpdate(filePath, fileContent, projectId, userPrompt.id),
+    (shellCommand) => onShellCommand(shellCommand, projectId, userPrompt.id)
   );
   let artifact = "";
 
