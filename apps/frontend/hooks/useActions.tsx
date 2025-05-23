@@ -3,13 +3,14 @@ import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-interface Action {
+export interface Action {
   id: string;
   content: string;
   projectId: string;
+  promptId: string;
 }
 
-export function useActions(projectId: String) {
+export function useActions(projectId: string) {
   const [actions, setActions] = useState<Action[]>([]);
   const { getToken } = useAuth();
 
@@ -28,12 +29,12 @@ export function useActions(projectId: String) {
     (async () => {
         await getActions();
     })();
-    let interval = setInterval(getActions, 5000);
+    const interval = setInterval(getActions, 5000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    console.log("All Prompts: ", actions);
+    console.log("All Actions: ", actions);
   }, [actions]);
 
   return {
