@@ -38,6 +38,7 @@ model Prompt {
   project   Project    @relation(fields: [projectId], references: [id])
   projectId String
   type      PromptType
+  Action    Action[]
 }
 
 model Action {
@@ -46,6 +47,8 @@ model Action {
   updatedAt DateTime @updatedAt
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
+  prompt    Prompt?   @relation(fields: [promptId], references: [id])
+  promptId  String?
   content   String
 }
 
