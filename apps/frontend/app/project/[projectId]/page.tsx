@@ -48,10 +48,10 @@ export default function ProjectPage({
   }, [prompts, actions]);
 
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-y-hidden">
       {/* <Appbar /> */}
       <div className="text-white flex h-full">
-        <div className="w-[600px] h-screen flex flex-col justify-between p-4">
+        <div className="w-[600px] h-screen flex flex-col justify-between p-4 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none]">
           <div>
             <div className="text-2xl font-bold">Chat History</div>
             {groupedPromptWithActions?.map((prompt) => {

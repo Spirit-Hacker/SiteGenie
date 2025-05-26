@@ -7,13 +7,13 @@ import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { BACKEND_URL, WORKER_BACKEND_URL } from "@/config";
-import { useProjects } from "@/store/userProjects";
+// import { useProjects } from "@/store/userProjects";
 import { useRouter } from "next/navigation";
 
 export function Prompt() {
   const [prompt, setPrompt] = useState("");
   const { getToken } = useAuth();
-  const { fetchProjects } = useProjects();
+  // const { fetchProjects } = useProjects();
   const router = useRouter();
 
   return (
@@ -48,13 +48,15 @@ export function Prompt() {
               }
             );
             console.log(response.data);
-            await fetchProjects(token);
-            setPrompt("");
+            // await fetchProjects(token);
 
+            // call worker orchestrator to run an ec2 instance
+            
             await axios.post(`${WORKER_BACKEND_URL}/prompt`, {
               projectId: response.data.projectId,
               prompt: prompt,
             });
+            setPrompt("");
             router.push(`/project/${response.data.projectId}`);
           }}
         >
