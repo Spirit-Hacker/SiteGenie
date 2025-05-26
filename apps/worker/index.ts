@@ -48,7 +48,7 @@ app.post("/prompt", async (req, res) => {
         role: prompt.type === "USER" ? "user" : "assistant",
         content: prompt.content,
       })),
-      system: systemPrompt("REACT_NATIVE"),
+      system: systemPrompt("NEXTJS"),
       model: "claude-3-7-sonnet-20250219",
       max_tokens: 8000,
     })
