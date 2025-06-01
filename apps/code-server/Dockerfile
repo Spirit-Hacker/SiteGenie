@@ -12,7 +12,11 @@ USER coder
 
 EXPOSE 8080
 
-RUN pwd && pwd && pwd && pwd && ls && pwd && pwd && ls
+RUN ls
+RUN mkdir -p /home/coder/.local/share/code-server/User/
+COPY settings.json /home/coder/.local/share/code-server/User/settings.json
+RUN sudo chown -R coder:coder /home/coder/.local/share/code-server/User/settings.json
+
 RUN mkdir -p /home/coder/bolty-worker
 RUN wget --no-cache https://github.com/Spirit-Hacker/remote-vscode-extension/raw/refs/heads/main/site-genie-listener-0.0.1.vsix
 RUN code-server --install-extension site-genie-listener-0.0.1.vsix

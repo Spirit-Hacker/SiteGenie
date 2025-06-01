@@ -1,0 +1,30 @@
+{
+  // Appearance
+  "workbench.colorTheme": "Abyss",
+  "workbench.statusBar.visible": false,
+  "window.menuBarVisibility": "hidden",
+  "workbench.editor.showTabs": "single",
+  "breadcrumbs.enabled": false,
+  // Sidebar and Explorer
+  "workbench.sideBar.location": "left",
+  "explorer.openEditors.visible": 0,
+  "explorer.compactFolders": true,
+  // Startup
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "update.showReleaseNotes": false,
+  // Terminal
+  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.tabs.enabled": false,
+  // Disable welcome and suggestions
+  "workbench.enableExperiments": false,
+  "extensions.ignoreRecommendations": true,
+  // Editor UI
+  "editor.minimap.enabled": false,
+  "editor.scrollbar.vertical": "hidden",
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.glyphMargin": false,
+  "editor.renderLineHighlight": "none",
+  "editor.renderWhitespace": "none",
+  "workbench.activityBar.location": "hidden"
+}
