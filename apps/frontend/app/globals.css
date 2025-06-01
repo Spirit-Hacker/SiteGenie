@@ -129,3 +129,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.mask-gradient-corner {
+  -webkit-mask-image: linear-gradient(to bottom right, white 20%, transparent 60%);
+  mask-image: linear-gradient(to bottom right, white 20%, transparent 60%);
+}

@@ -12,6 +12,7 @@ import {
 import { useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import { Project, useProjects } from "@/store/userProjects";
+import { NavbarLogo } from "./ui/resizable-navbar";
 
 export default function AppSideBar() {
   const [open, setOpen] = useState(false);
@@ -63,11 +64,20 @@ export default function AppSideBar() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <div className="p-2 cursor-pointer" onClick={() => setOpen(true)}>
-          Bolty
+        <div
+          className="p-2 cursor-pointer"
+          onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            e.preventDefault();
+            setOpen(true);
+          }}
+        >
+          <NavbarLogo />
         </div>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[300px] sm:w-[350px] bg-black overflow-y-auto hide-scrollbar">
+      <SheetContent
+        side="left"
+        className="w-[300px] sm:w-[350px] bg-black overflow-y-auto hide-scrollbar"
+      >
         <SheetHeader>
           <SheetTitle className="text-white">My Projects</SheetTitle>
         </SheetHeader>

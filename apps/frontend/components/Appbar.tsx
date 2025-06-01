@@ -6,17 +6,24 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { NavbarButton } from "./ui/resizable-navbar";
 
 export function Appbar() {
   return (
-    <div className="flex justify-between px-4 py-1 text-white items-center border-b-2 border-white h-14">
-      <div>
-        <AppSideBar />
-      </div>
-      <div>
+    <div className="w-full h-[8%] flex items-center justify-evenly bg-transparent">
+      <AppSideBar />
+      <div className="flex items-center gap-4">
         <SignedOut>
-          <SignInButton />
-          <SignUpButton />
+          <NavbarButton>
+            <SignInButton>
+              <div className="cursor-pointer">Sign In</div>
+            </SignInButton>
+          </NavbarButton>
+          <NavbarButton>
+            <SignUpButton>
+              <div className="cursor-pointer">Sign Up</div>
+            </SignUpButton>
+          </NavbarButton>
         </SignedOut>
         <SignedIn>
           <UserButton />
