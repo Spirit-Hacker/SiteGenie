@@ -14,10 +14,24 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(uuid())
+  email         String    @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  plan          PlanType  @default(BASIC)
+  planStartedAt DateTime  @default(now())
+  planEndsAt    DateTime?
+  Plan          Plan?     @relation(fields: [planId], references: [id])
+  planId        String?
+}
+
+model Plan {
+  id          String @id @default(uuid())
+  name        String @unique
+  description String
+  price       Int // in cents
+  features    Json // optional JSON of features
+  users       User[]
 }
 
 model Project {
@@ -47,7 +61,7 @@ model Action {
   updatedAt DateTime @updatedAt
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
-  prompt    Prompt?   @relation(fields: [promptId], references: [id])
+  prompt    Prompt?  @relation(fields: [promptId], references: [id])
   promptId  String?
   content   String
 }
@@ -55,4 +69,10 @@ model Action {
 enum PromptType {
   USER
   SYSTEM
+}
+
+enum PlanType {
+  BASIC
+  PREMIUM
+  BUSINESS
 }
