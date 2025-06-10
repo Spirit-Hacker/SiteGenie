@@ -14,14 +14,15 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  plan          PlanType  @default(BASIC)
-  planStartedAt DateTime  @default(now())
-  planEndsAt    DateTime?
-  Plan          Plan?     @relation(fields: [planId], references: [id])
+  id            String   @id @default(uuid())
+  clerkId       String?
+  email         String?  @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  plan          PlanType @default(BASIC)
+  planStartedAt DateTime @default(now())
+  planEndsAt    DateTime
+  Plan          Plan?    @relation(fields: [planId], references: [id])
   planId        String?
 }
 
