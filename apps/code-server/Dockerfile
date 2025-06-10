@@ -12,7 +12,6 @@ USER coder
 
 EXPOSE 8080
 
-RUN ls
 RUN mkdir -p /home/coder/.local/share/code-server/User/
 COPY settings.json /home/coder/.local/share/code-server/User/settings.json
 RUN sudo chown -R coder:coder /home/coder/.local/share/code-server/User/settings.json

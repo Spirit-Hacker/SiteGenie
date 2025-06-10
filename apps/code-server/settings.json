@@ -3,7 +3,6 @@
   "workbench.colorTheme": "Abyss",
   "workbench.statusBar.visible": false,
   "window.menuBarVisibility": "hidden",
-  "workbench.editor.showTabs": "single",
   "breadcrumbs.enabled": false,
   // Sidebar and Explorer
   "workbench.sideBar.location": "left",
@@ -14,8 +13,7 @@
   "workbench.tips.enabled": false,
   "update.showReleaseNotes": false,
   // Terminal
-  "terminal.integrated.defaultLocation": "editor",
-  "terminal.integrated.tabs.enabled": false,
+  "terminal.integrated.defaultLocation": "view",
   // Disable welcome and suggestions
   "workbench.enableExperiments": false,
   "extensions.ignoreRecommendations": true,
