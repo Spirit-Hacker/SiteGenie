@@ -9,14 +9,22 @@ export const authMiddleware = (
   const authHeader = req.headers.authorization; // Bearer <token>
   const token = authHeader && authHeader.split(" ")[1];
 
+  // console.log("Testing Token 1: ", token);
+  // console.log("Testing Token 1: ", token !== "null");
+  // console.log("Testing Token 1: ", authHeader);
+
   if (!token) {
     res.status(401).json({ message: "Unauthorized, token expired" });
     return;
   }
 
+  // console.log("Testing Token 2: ", token);
+
   const decoded = jwt.verify(token, process.env.JWT_PUBLIC_KEY!, {
     algorithms: ["RS256"],
   });
+
+  // console.log("Testing Token 3: ", token);
 
   if (!decoded) {
     res.status(401).json({ message: "Unauthorized, jwt key error" });
@@ -27,7 +35,7 @@ export const authMiddleware = (
 
   const userId = (decoded as any).sub;
   if (!userId) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized User" });
     return;
   }
 
