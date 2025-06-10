@@ -9,52 +9,54 @@ const wss = new WebSocketServer({ server });
 const clients = new Set<WebSocket>();
 
 const testContent = `
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
-  This file was updated by Pranil
+
+"use client";
+
+import { motion } from 'motion/react';
+import { ReactNode } from 'react';
+
+interface GlassCardProps {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}
+
+export const GlassCard = ({ children, className = '', delay = 0 }: GlassCardProps) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ 
+        scale: 1.02,
+        boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)" 
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 `;
 
 wss.on("connection", async (ws: WebSocket) => {
   console.log("Client connected");
   clients.add(ws);
 
+  // test data
+  // await onFileUpdate("components/Pranil.tsx", testContent, "12345", "12345");
+  // await onFileUpdate("components/Sunil.tsx", testContent, "12345", "12345");
   // await onFileUpdate(
-  //   "app/(tabs)/pranil.tsx",
-  //   testContent,
-  //   "12345"
-  // );
-
-  // await onFileUpdate(
-  //   "app/(tabs)/kavya.tsx",
-  //   testContent,
-  //   "12345"
-  // );
-
-  // await onFileUpdate(
-  //   "app/(tabs)/dad/sunil.tsx",
-  //   testContent,
+  //   "components/Kavya.tsx",
+  //   `Whats
+  //   app
+  //   sdhbhvdshvhd`,
+  //   "12345",
   //   "12345"
   // );
 
   // const command = "pwd && ls";
-  // onShellCommand(command, "12345");
+  // onShellCommand(command, "12345", "12345");
 
   ws.on("close", () => {
     console.log("Client disconnected");

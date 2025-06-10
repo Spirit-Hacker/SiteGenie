@@ -1774,7 +1774,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 8081",
+    "dev": "next dev --port 8081",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

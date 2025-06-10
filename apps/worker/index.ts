@@ -5,16 +5,43 @@ import { systemPrompt } from "./systemPrompt";
 import { prismaClient } from "db/client";
 import { ArtifactProcessor } from "./parser";
 import { onFileUpdate, onShellCommand } from "./os";
+import { authMiddleware } from "./middleware";
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
 app.use(express.json());
 
-app.post("/prompt", async (req, res) => {
+app.post("/prompt", authMiddleware, async (req, res) => {
+  const userId = req.userId!;
   const { prompt, projectId } = req.body;
   const client = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
   });
+
+  const user = await prismaClient.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    // user is on a basic plan
+    const prompts = await prismaClient.prompt.findMany({
+      where: {
+        projectId: projectId,
+      },
+    });
+
+    if (prompts.length >= 5) {
+      res.status(400).json({
+        success: false,
+        message: "You have reached your prompt limit",
+      });
+      return;
+    }
+  }
 
   const userPrompt = await prismaClient.prompt.create({
     data: {
