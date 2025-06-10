@@ -45,7 +45,7 @@ const refreshInstances = async () => {
   const ec2InstanceCommand = new DescribeInstancesCommand({
     InstanceIds: allAutoScalingMachines.AutoScalingInstances?.map(
       (instance) => instance.InstanceId
-    ),
+    ).filter((id): id is string => id !== undefined),
   });
 
   const ec2Response = await ec2Client.send(ec2InstanceCommand);
