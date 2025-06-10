@@ -57,9 +57,9 @@ export default function AppSideBar() {
     setGroupedProjects(groups);
   }, [projects]);
 
-  //   useEffect(() => {
-  //     console.log("✅ groupedProjects (after set):", groupedProjects);
-  //   }, [groupedProjects]);
+    // useEffect(() => {
+    //   console.log("✅ groupedProjects (after set):", groupedProjects);
+    // }, [groupedProjects]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

@@ -9,27 +9,34 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth, useClerk } from "@clerk/nextjs";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+import { BACKEND_URL } from "@/config";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 const plans = [
   {
     name: "Basic",
     price: "Free",
     description: "Get started with core features",
-    features: ["5 Project", "Limited Support", "Community Access"],
+    features: ["2 Project", "5 Prompts Per Project", "Limited Support", "Community Access"],
     buttonText: "Get Started",
   },
   {
     name: "Premium",
     price: "$19/month",
     description: "Ideal for freelancers and devs",
-    features: ["10 Projects", "Priority Support", "Custom Domains"],
+    features: ["10 Projects", "Unlimited Prompts", "Priority Support", "Custom Domains"],
     buttonText: "Upgrade",
   },
   {
     name: "Business",
     price: "$49/month",
     description: "Best for teams and agencies",
-    features: ["Unlimited Projects", "Dedicated Support", "Advanced Analytics"],
+    features: ["Unlimited Projects", "Unlimited Prompts", "Dedicated Support", "Advanced Analytics"],
     buttonText: "Contact Sales",
   },
 ];
@@ -37,6 +44,29 @@ const plans = [
 export default function Pricing() {
   const { getToken } = useAuth();
   const { openSignIn } = useClerk();
+
+  async function handleSubscribe(planType: string) {
+    const token = await getToken();
+
+    const response = await axios.post(
+      `${BACKEND_URL}/create-checkout-session`,
+      {
+        planType: planType === "premium" ? "PREMIUM" : "BUSINESS",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await response.data;
+    console.log("Payment Data: ", data);
+    const stripe = await stripePromise;
+    await stripe!.redirectToCheckout({
+      sessionId: data.sessionId,
+    });
+  }
+
   return (
     <section className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 py-12">
       <h2 className="text-4xl font-bold mb-4 text-center">Pricing Plans</h2>
@@ -79,7 +109,7 @@ export default function Pricing() {
                       return;
                     }
                   } else {
-                    // Add Payment Gateway
+                    await handleSubscribe(plan.name.toLowerCase());
                     return;
                   }
                   window.open("http://localhost:3000/genie", "_blank");

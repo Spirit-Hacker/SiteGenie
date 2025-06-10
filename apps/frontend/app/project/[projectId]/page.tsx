@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { WORKER_BACKEND_URL, WORKER_URL } from "@/config";
 import { Action, useActions } from "@/hooks/useActions";
 import { Prompt, usePrompts } from "@/hooks/usePrompts";
+import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -22,7 +23,36 @@ export default function ProjectPage({
   const { prompts } = usePrompts(projectId);
   const { actions } = useActions(projectId);
   const [prompt, setPrompt] = useState("");
-  console.log("Project ID Page.tsx :", projectId);
+  const [loading, setLoading] = useState(false);
+  const { getToken } = useAuth();
+  console.log("Project ID Page.tsx : ", projectId);
+
+  const handleOnclick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const token = await getToken();
+      const response = await axios.post(
+        `${WORKER_BACKEND_URL}/prompt`,
+        {
+          projectId: projectId,
+          prompt: prompt,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Prompt Creation log: ", response);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) console.log("Error: ", error.message);
+      else console.log("Error: ", error);
+    } finally {
+      setLoading(false);
+      setPrompt("");
+    }
+  };
 
   const [groupedPromptWithActions, setGroupedPromptWithActions] =
     useState<GroupedPrompt[]>();
@@ -66,7 +96,7 @@ export default function ProjectPage({
                       />
                     </div>
                     <div className="text-xl font-semibold text-white bg-gray-800 rounded-2xl px-4 py-2 h-full w-full">
-                      {prompt.content}
+                      {loading ? "AI is Thinking..." : prompt.content}
                     </div>
                   </div>
                   <div className="flex items-center px-4 py-2 mb-3 mt-3 gap-2">
@@ -77,20 +107,21 @@ export default function ProjectPage({
                         alt="AI"
                       />
                     </div>
-                    <div className="bg-gray-800 rounded-2xl w-full h-full px-4 py-2">
-                      {prompt.actions.map((action) => {
-                        return (
-                          <div
-                            key={action.id}
-                            className="text-md  text-white"
-                          >
-                            <span className="mr-2">
-                              {action.content}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
+
+                    {prompt.actions.length > 0 && (
+                      <div className="bg-gray-800 rounded-2xl w-full h-full px-4 py-2">
+                        {prompt.actions.map((action) => {
+                          return (
+                            <div
+                              key={action.id}
+                              className="text-md  text-white"
+                            >
+                              <span className="mr-2">{action.content}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -105,13 +136,7 @@ export default function ProjectPage({
             />
             <Button
               className="bg-white text-black cursor-pointer hover:bg-slate-200"
-              onClick={async () => {
-                await axios.post(`${WORKER_BACKEND_URL}/prompt`, {
-                  projectId: projectId,
-                  prompt: prompt,
-                });
-                setPrompt("");
-              }}
+              onClick={handleOnclick}
             >
               <Send />
             </Button>

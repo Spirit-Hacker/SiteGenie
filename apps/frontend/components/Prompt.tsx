@@ -16,6 +16,56 @@ export function Prompt() {
   // const { fetchProjects } = useProjects();
   const router = useRouter();
 
+  const handleOnClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      if (prompt.length === 0) {
+        return;
+      }
+
+      const token = await getToken();
+
+      const response = await axios.post(
+        `${BACKEND_URL}/project`,
+        {
+          prompt: prompt,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Project Creation log: ", response);
+
+      // call worker orchestrator to run an ec2 instance
+
+      await axios.post(
+        `${WORKER_BACKEND_URL}/prompt`,
+        {
+          projectId: response.data.projectId,
+          prompt: prompt,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPrompt("");
+      router.push(`/project/${response.data.projectId}`);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        alert(error?.response?.data.message);
+      } else {
+        alert("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className="relative rounded-md z-0">
@@ -40,43 +90,8 @@ export function Prompt() {
       <div className="flex justify-end pt-2 z-10">
         <Button
           className="bg-white text-black cursor-pointer hover:bg-slate-200 z-10"
-          onClick={async () => {
-            setLoading(true);
-            if (prompt.length === 0) {
-              return;
-            }
-
-            const token = await getToken();
-            if (!token) {
-              return;
-            }
-
-            const response = await axios.post(
-              `${BACKEND_URL}/project`,
-              {
-                prompt: prompt,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            console.log(response.data);
-            // await fetchProjects(token);
-
-            // call worker orchestrator to run an ec2 instance
-
-            await axios.post(`${WORKER_BACKEND_URL}/prompt`, {
-              projectId: response.data.projectId,
-              prompt: prompt,
-            });
-            setPrompt("");
-            setLoading(false);
-            router.push(`/project/${response.data.projectId}`);
-          }}
+          onClick={handleOnClick}
         >
-          {/* <Send /> */}
           {loading ? (
             <div>Loading...</div>
           ) : (
