@@ -31,9 +31,11 @@ const ec2Client = new EC2Client({
 type MACHINE = {
   ip: string;
   isUsed: boolean;
+  machineId: string;
   assignedProject?: string;
 };
 
+const TOTAL_IDLE_MACHINES_WE_WANT = 1;
 let ALL_MACHINES: MACHINE[] = [];
 const ACTIVE_MACHINE_IP = new Set<string>();
 
@@ -66,9 +68,11 @@ const refreshInstances = async () => {
         ACTIVE_MACHINE_IP.add(publicIp);
 
         if (!ALL_MACHINES.find((machine) => machine.ip === publicIp)) {
+          const inctanceId = instance.InstanceId;
           ALL_MACHINES.push({
             ip: publicIp,
             isUsed: false,
+            machineId: inctanceId!,
           });
         }
       }
@@ -93,24 +97,31 @@ app.get("/:projectId", async (req, res) => {
   const idleMachine = ALL_MACHINES.find((machine) => machine.isUsed === false);
   if (!idleMachine) {
     // scale up the infrastructure
-    res.status(400).send("No idle machines");
+    res.status(400).send("No idle machines found, Scaling up the infrastructure please after short delay");
     return;
   }
+
   idleMachine.isUsed = true;
+
   // scale up the infrastructure
   // 2 + 5 - 2 = 5 := all machines available + (totalIdleMachinesWeWant - idleMachines)
+  const desiredCapacity =
+    ALL_MACHINES.length +
+    (TOTAL_IDLE_MACHINES_WE_WANT -
+      ALL_MACHINES.filter((machine) => machine.isUsed === false).length);
+
   const command = new SetDesiredCapacityCommand({
     AutoScalingGroupName: process.env.ASG_NAME!,
-    DesiredCapacity:
-      ALL_MACHINES.length +
-      (5 - ALL_MACHINES.filter((machine) => machine.isUsed === false).length),
+    DesiredCapacity: desiredCapacity,
   });
 
   await client.send(command);
 
-  res.send({
+  res.status(200).send({
     ip: idleMachine.ip,
+    machineId: idleMachine.machineId,
   });
+  return;
 });
 
 app.post("/destroy", async (req, res) => {
@@ -123,8 +134,9 @@ app.post("/destroy", async (req, res) => {
 
   await client.send(command);
   res.send("Machine destroyed: " + machineId);
+  return;
 });
 
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
+app.listen(9093, () => {
+  console.log("Server started on port 9093");
 });
