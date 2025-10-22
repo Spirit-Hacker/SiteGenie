@@ -2,7 +2,7 @@
 // import { Appbar } from "@/components/Appbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { WORKER_BACKEND_URL, WORKER_URL } from "@/config";
+import { WORKER_URL } from "@/config";
 import { Action, useActions } from "@/hooks/useActions";
 import { Prompt, usePrompts } from "@/hooks/usePrompts";
 import { useAuth } from "@clerk/nextjs";
@@ -32,8 +32,10 @@ export default function ProjectPage({
     setLoading(true);
     try {
       const token = await getToken();
+      const workerIp = localStorage.getItem("workerIp") || "localhost";
+      const Worker_Backend_URL = `http://${workerIp}:9092`;
       const response = await axios.post(
-        `${WORKER_BACKEND_URL}/prompt`,
+        `${Worker_Backend_URL}/prompt`,
         {
           projectId: projectId,
           prompt: prompt,

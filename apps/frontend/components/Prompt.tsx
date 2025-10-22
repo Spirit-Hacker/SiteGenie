@@ -5,7 +5,7 @@ import { Textarea } from "./ui/textarea";
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { BACKEND_URL, WORKER_BACKEND_URL } from "@/config";
+import { BACKEND_URL } from "@/config";
 // import { useProjects } from "@/store/userProjects";
 import { useRouter } from "next/navigation";
 
@@ -39,22 +39,33 @@ export function Prompt() {
       );
       console.log("Project Creation log: ", response);
 
-      // call worker orchestrator to run an ec2 instance
+      if (response.status === 200) {
+        // TODO: Call worker orchestrator to run an ec2 instance
+        const projectId = response.data.projectId;
+        // const res = await axios.get(`${WORKER_ORCHESTRATOR_URL}/${projectId}`);
 
-      await axios.post(
-        `${WORKER_BACKEND_URL}/prompt`,
-        {
-          projectId: response.data.projectId,
-          prompt: prompt,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        // if (res.status === 200) {
+        // localStorage.setItem("workerIp", JSON.stringify(res.data.ip));
+        // localStorage.setItem("workerMachineId", JSON.stringify(res.data.machineId));
+        console.log("Worker instance started");
+        const workerIp = localStorage.getItem("workerIp");
+        const Worker_Backend_URL = `http://${workerIp != null ? workerIp : "localhost"}:9092`;
+        await axios.post(
+          `${Worker_Backend_URL}/prompt`,
+          {
+            projectId: projectId,
+            prompt: prompt,
           },
-        }
-      );
-      setPrompt("");
-      router.push(`/project/${response.data.projectId}`);
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        router.push(`/project/${response.data.projectId}`);
+        // }
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         alert(error?.response?.data.message);
@@ -62,6 +73,7 @@ export function Prompt() {
         alert("Something went wrong");
       }
     } finally {
+      setPrompt("");
       setLoading(false);
     }
   };
