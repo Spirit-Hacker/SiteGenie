@@ -98,7 +98,7 @@ app.post("/prompt", authMiddleware, async (req, res) => {
       console.error(error);
     });
 
-  res.json({ response });
+  res.status(200).json({ response });
 });
 
 app.listen(9092, () => {
