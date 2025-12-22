@@ -5,7 +5,7 @@ import { Textarea } from "./ui/textarea";
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { BACKEND_URL } from "@/config";
+import { BACKEND_URL, WORKER_BACKEND_URL } from "@/config";
 // import { useProjects } from "@/store/userProjects";
 import { useRouter } from "next/navigation";
 
@@ -48,10 +48,10 @@ export function Prompt() {
         // localStorage.setItem("workerIp", JSON.stringify(res.data.ip));
         // localStorage.setItem("workerMachineId", JSON.stringify(res.data.machineId));
         console.log("Worker instance started");
-        const workerIp = localStorage.getItem("workerIp");
-        const Worker_Backend_URL = `http://${workerIp != null ? workerIp : "localhost"}:9092`;
+        // const workerIp = localStorage.getItem("workerIp");
+        // const Worker_Backend_URL = `http://3.111.42.238:9092`;
         await axios.post(
-          `${Worker_Backend_URL}/prompt`,
+          `${WORKER_BACKEND_URL}/prompt`,
           {
             projectId: projectId,
             prompt: prompt,
